@@ -60,8 +60,8 @@ Requirements:
 - [pm2](https://pm2.keymetrics.io/) - For running Uptime Kuma in the background
 
 ```bash
-# Update your npm to the latest version
-npm install npm -g
+# Update your npm
+npm install npm@9 -g
 
 git clone https://github.com/louislam/uptime-kuma.git
 cd uptime-kuma
@@ -184,7 +184,7 @@ If you want to report a bug or request a new feature, feel free to open a [new i
 ### Translations
 If you want to translate Uptime Kuma into your language, please visit [Weblate Readme](https://github.com/louislam/uptime-kuma/blob/master/src/lang/README.md).
 
-## Spelling & Grammar
+### Spelling & Grammar
 
 Feel free to correct the grammar in the documentation or code.
 My mother language is not english and my grammar is not that great.
