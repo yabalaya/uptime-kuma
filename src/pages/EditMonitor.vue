@@ -315,7 +315,9 @@
                                 <div class="mb-3">
                                     <label for="docker-host" class="form-label">{{ $t("Docker Host") }}</label>
                                     <ActionSelect
+                                        id="docker-host"
                                         v-model="monitor.docker_host"
+                                        :action-aria-label="$t('openModalTo', $t('Setup Docker Host'))"
                                         :options="dockerHostOptionsList"
                                         :disabled="$root.dockerHostList == null || $root.dockerHostList.length === 0"
                                         :icon="'plus'"
@@ -347,11 +349,33 @@
                                 </div>
 
                                 <div class="my-3">
-                                    <label for="mqttSuccessMessage" class="form-label">MQTT {{ $t("successMessage") }}</label>
-                                    <input id="mqttSuccessMessage" v-model="monitor.mqttSuccessMessage" type="text" class="form-control">
+                                    <label for="mqttCheckType" class="form-label">MQTT {{ $t("Check Type") }}</label>
+                                    <select id="mqttCheckType" v-model="monitor.mqttCheckType" class="form-select" required>
+                                        <option value="keyword">{{ $t("Keyword") }}</option>
+                                        <option value="json-query">{{ $t("Json Query") }}</option>
+                                    </select>
+                                </div>
+
+                                <div v-if="monitor.mqttCheckType === 'keyword'" class="my-3">
+                                    <label for="mqttSuccessKeyword" class="form-label">MQTT {{ $t("successKeyword") }}</label>
+                                    <input id="mqttSuccessKeyword" v-model="monitor.mqttSuccessMessage" type="text" class="form-control">
                                     <div class="form-text">
-                                        {{ $t("successMessageExplanation") }}
+                                        {{ $t("successKeywordExplanation") }}
                                     </div>
+                                </div>
+
+                                <!-- Json Query -->
+                                <div v-if="monitor.mqttCheckType === 'json-query'" class="my-3">
+                                    <label for="jsonPath" class="form-label">{{ $t("Json Query") }}</label>
+                                    <input id="jsonPath" v-model="monitor.jsonPath" type="text" class="form-control" required>
+
+                                    <!-- eslint-disable-next-line vue/no-v-html -->
+                                    <div class="form-text" v-html="$t('jsonQueryDescription')">
+                                    </div>
+                                    <br>
+
+                                    <label for="expectedValue" class="form-label">{{ $t("Expected Value") }}</label>
+                                    <input id="expectedValue" v-model="monitor.expectedValue" type="text" class="form-control" required>
                                 </div>
                             </template>
 
@@ -525,9 +549,11 @@
 
                             <!-- Parent Monitor -->
                             <div class="my-3">
-                                <label for="parent" class="form-label">{{ $t("Monitor Group") }}</label>
+                                <label for="monitorGroupSelector" class="form-label">{{ $t("Monitor Group") }}</label>
                                 <ActionSelect
+                                    id="monitorGroupSelector"
                                     v-model="monitor.parent"
+                                    :action-aria-label="$t('openModalTo', 'setup a new monitor group')"
                                     :options="parentMonitorOptionsList"
                                     :disabled="sortedGroupMonitorList.length === 0 && draftGroupName == null"
                                     :icon="'plus'"
@@ -892,7 +918,7 @@ const monitorDefaults = {
     interval: 60,
     retryInterval: 60,
     resendInterval: 0,
-    maxretries: 1,
+    maxretries: 0,
     timeout: 48,
     notificationIDList: {},
     ignoreTls: false,
@@ -910,6 +936,7 @@ const monitorDefaults = {
     mqttPassword: "",
     mqttTopic: "",
     mqttSuccessMessage: "",
+    mqttCheckType: "keyword",
     authMethod: null,
     oauth_auth_method: "client_secret_basic",
     httpBodyEncoding: "json",
